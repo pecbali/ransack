@@ -76,11 +76,13 @@ module Ransack
         case args
         when Array
           args.each do |val|
+            puts "###{val}"
             val = Value.new(@context, val)
             self.values << val
           end
         when Hash
           args.each do |index, attrs|
+            puts "###{attrs[:value]}"
             val = Value.new(@context, attrs[:value])
             self.values << val
           end
@@ -120,6 +122,7 @@ module Ransack
         params.with_indifferent_access.each do |key, value|
           if key.match(/^(a|v|p|m)$/)
             self.send("#{key}=", value)
+            puts "@@ #{key} = #{value}"
           end
         end
 
