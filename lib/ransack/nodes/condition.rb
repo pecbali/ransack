@@ -33,9 +33,6 @@ module Ransack
           else
             Array(values)
           end
-
-        end
-          if(values)
         end
 
         def extract_attributes_and_predicate(key)
