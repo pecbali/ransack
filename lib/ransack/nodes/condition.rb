@@ -16,7 +16,7 @@ module Ransack
               :a => attributes,
               :p => predicate.name,
               :m => combinator,
-              :v => predicate.wants_array ? get_array_values(values, predicate.name) : [values]
+              :v => predicate.wants_array ? Array(values) : [values]
             )
             # TODO: Figure out what to do with multiple types of attributes, if anything.
             # Tempted to go with "garbage in, garbage out" on this one
@@ -25,15 +25,6 @@ module Ransack
         end
 
         private
-
-        def get_array_values(values, predicate_name)
-          puts "!!!#{predicate_name}!!!#{values}"
-          if(predicate_name.match(/in|not_in/))
-            Array(values)
-          else
-            Array(values)
-          end
-        end
 
         def extract_attributes_and_predicate(key)
           str = key.dup
@@ -85,15 +76,22 @@ module Ransack
         case args
         when Array
           args.each do |val|
-            puts "$$$#{val}"
             val = Value.new(@context, val)
             self.values << val
           end
         when Hash
           args.each do |index, attrs|
-            puts "###{attrs[:value]}"
-            val = Value.new(@context, attrs[:value])
-            self.values << val
+            if(attrs[:value].include?(","))
+              val_array = attrs[:value].split(",")
+              val_array.each { |val|
+                val = Value.new(@context, val.strip)
+                self.values << val
+              }
+            else
+              val = Value.new(@context, attrs[:value])
+              self.values << val
+            end
+
           end
         else
           raise ArgumentError, "Invalid argument (#{args.class}) supplied to values="
