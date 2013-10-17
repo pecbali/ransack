@@ -16,7 +16,7 @@ module Ransack
               :a => attributes,
               :p => predicate.name,
               :m => combinator,
-              :v => predicate.wants_array ? Array(values) : [values]
+              :v => predicate.wants_array ? get_array_values(values, predicate.name) : [values]
             )
             # TODO: Figure out what to do with multiple types of attributes, if anything.
             # Tempted to go with "garbage in, garbage out" on this one
@@ -25,6 +25,18 @@ module Ransack
         end
 
         private
+
+        def get_array_values(values, predicate_name)
+          puts "!!!#{predicate_name}!!!#{values}"
+          if(predicate_name.match(/in|not_in/))
+            Array(values)
+          else
+            Array(values)
+          end
+
+        end
+          if(values)
+        end
 
         def extract_attributes_and_predicate(key)
           str = key.dup
@@ -76,7 +88,7 @@ module Ransack
         case args
         when Array
           args.each do |val|
-            puts "###{val}"
+            puts "$$$#{val}"
             val = Value.new(@context, val)
             self.values << val
           end
