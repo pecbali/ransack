@@ -129,7 +129,6 @@ module Ransack
         params.with_indifferent_access.each do |key, value|
           if key.match(/^(a|v|p|m)$/)
             self.send("#{key}=", value)
-            puts "@@ #{key} = #{value}"
           end
         end
 
